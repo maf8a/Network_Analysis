@@ -4,7 +4,7 @@ Analyses and data associated with the manuscript: *Mixed network structure in a 
 ***
 ***
 
-### `SiteMatrices` 
+### `NetworkAnalysis_SiteMatrices` 
 
 ***
 
@@ -13,7 +13,7 @@ R script used for network analyses of attachment site matrices.
  
 
 
-### `ConsensusMatrices` 
+### `NetworkAnalysis_ConsensusMatrices` 
 
 ***
 
