@@ -32,7 +32,7 @@ read in full data matrix
 ```{r loaddata}
 quantScores <- read.csv2( file ="quantScores_forNetworkAnalysis.csv", header = TRUE, row.names = 1)
 
-quantScores_matrix <- data.matrix(quantScores_reduced)#turn it into a matrix format
+quantScores_matrix <- data.matrix(quantScores)#turn it into a matrix format
 
 visweb(quantScores_matrix)#visualize the matrix
 ```
@@ -42,38 +42,38 @@ visweb(quantScores_matrix)#visualize the matrix
 ***
 
 ```{r siteMatrices}
-quantScores_F_reduced <- dplyr::select(quantScores_reduced, contains("_F"))
-quantMatrix_F_reduced <- data.matrix(quantScores_F_reduced)
+quantScores_F <- dplyr::select(quantScores, contains("_F"))
+quantMatrix_F <- data.matrix(quantScores_F)
 
-quantScores_D_reduced <- dplyr::select(quantScores_reduced, contains("_D"))
-quantMatrix_D_reduced <- data.matrix(quantScores_D_reduced)
+quantScores_D <- dplyr::select(quantScores, contains("_D"))
+quantMatrix_D <- data.matrix(quantScores_D)
 
-quantScores_L4_reduced <- dplyr::select(quantScores_reduced, contains("_L4"))
-quantMatrix_L4_reduced <- data.matrix(quantScores_L4_reduced)
+quantScores_L4 <- dplyr::select(quantScores, contains("_L4"))
+quantMatrix_L4 <- data.matrix(quantScores_L4)
 
-quantScores_L5_reduced <- dplyr::select(quantScores_reduced, contains("_L5"))
-quantMatrix_L5_reduced <- data.matrix(quantScores_L5_reduced)
+quantScores_L5 <- dplyr::select(quantScores, contains("_L5"))
+quantMatrix_L5 <- data.matrix(quantScores_L5)
 
-quantScores_E_reduced <- dplyr::select(quantScores_reduced, contains("_E"))
-quantMatrix_E_reduced <- data.matrix(quantScores_E_reduced)
+quantScores_E <- dplyr::select(quantScores, contains("_E"))
+quantMatrix_E <- data.matrix(quantScores_E)
 ```
 
 change the colnames of the matrices to exclude the site names
 ```{r colnames}
-colnames(quantMatrix_F_reduced) <- c("H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12")
-colnames(quantMatrix_D_reduced) <- c("H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12")
-colnames(quantMatrix_L4_reduced) <- c("H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12")
-colnames(quantMatrix_L5_reduced) <- c("H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12")
-colnames(quantMatrix_E_reduced) <- c("H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12")
+colnames(quantMatrix_F) <- c("H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12")
+colnames(quantMatrix_D) <- c("H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12")
+colnames(quantMatrix_L4) <- c("H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12")
+colnames(quantMatrix_L5) <- c("H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12")
+colnames(quantMatrix_E) <- c("H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12")
 ```
 
 visualize the matrices (by default sorted into maximally nested configuration)
 ```{r visualizeMatrices}
-visweb(quantMatrix_F_reduced, labsize = 2.8)
-visweb(quantMatrix_D_reduced, labsize = 2.5)
-visweb(quantMatrix_L4_reduced, labsize = 1.8)
-visweb(quantMatrix_L5_reduced, labsize = 1)
-visweb(quantMatrix_E_reduced, labsize = 2)
+visweb(quantMatrix_F, labsize = 2.8)
+visweb(quantMatrix_D, labsize = 2.5)
+visweb(quantMatrix_L4, labsize = 1.8)
+visweb(quantMatrix_L5, labsize = 1)
+visweb(quantMatrix_E, labsize = 2)
 ```
 
 
@@ -84,7 +84,7 @@ visweb(quantMatrix_E_reduced, labsize = 2)
 specify null model to compare against (I want to use swsh_samp from vegan package). The output WNODAmatrix from nest.smdm() is the same as the NODF statistic from nestednodf()
 
 ```{r nullmodel}
-nmF <- vegan::nullmodel(quantMatrix_F_reduced, "swsh_samp")#set up the null model approach
+nmF <- vegan::nullmodel(quantMatrix_F, "swsh_samp")#set up the null model approach
 nullsF <- simulate(nmF, nsim = 1000)#do the actual simulations of null models
 str(nullsF)#array of 1000 networks "behind" each other
 
@@ -94,19 +94,19 @@ nullsF[, ,11]
 
 
 #repeat for other sites
-nmD <- vegan::nullmodel(quantMatrix_D_reduced, "swsh_samp")#set up the null model approach
+nmD <- vegan::nullmodel(quantMatrix_D, "swsh_samp")#set up the null model approach
 nullsD <- simulate(nmD, nsim = 1000)#do the actual simulations of null models
 
 
-nmL4 <- vegan::nullmodel(quantMatrix_L4_reduced, "swsh_samp")#set up the null model approach
+nmL4 <- vegan::nullmodel(quantMatrix_L4, "swsh_samp")#set up the null model approach
 nullsL4 <- simulate(nmL4, nsim = 1000)#do the actual simulations of null models
 
 
-nmL5 <- vegan::nullmodel(quantMatrix_L5_reduced, "swsh_samp")#set up the null model approach
+nmL5 <- vegan::nullmodel(quantMatrix_L5, "swsh_samp")#set up the null model approach
 nullsL5 <- simulate(nmL5, nsim = 1000)#do the actual simulations of null models
 
 
-nmE <- vegan::nullmodel(quantMatrix_E_reduced, "swsh_samp")#set up the null model approach
+nmE <- vegan::nullmodel(quantMatrix_E, "swsh_samp")#set up the null model approach
 nullsE <- simulate(nmE, nsim = 1000)#do the actual simulations of null models
 ```
 
@@ -117,24 +117,24 @@ nullsE <- simulate(nmE, nsim = 1000)#do the actual simulations of null models
 Compute modularity and plot result for each attachment site. This uses function DIRTLPAwb+ (Beckett 2016) as default
 
 ```{r modularity}
-QF_obs <- DIRT_LPA_wb_plus(quantMatrix_F_reduced)$modularity#computes only modularity (for later comparison with null)
-modF <- computeModules(quantMatrix_F_reduced)#creates a richer moduleWeb class object for plotting
+QF_obs <- DIRT_LPA_wb_plus(quantMatrix_F)$modularity#computes only modularity (for later comparison with null)
+modF <- computeModules(quantMatrix_F)#creates a richer moduleWeb class object for plotting
 plotModuleWeb(modF, labsize = 0.8)
 
-QD_obs <- DIRT_LPA_wb_plus(quantMatrix_D_reduced)$modularity
-modD <- computeModules(quantMatrix_D_reduced)
+QD_obs <- DIRT_LPA_wb_plus(quantMatrix_D)$modularity
+modD <- computeModules(quantMatrix_D)
 plotModuleWeb(modD)
 
-QL4_obs <- DIRT_LPA_wb_plus(quantMatrix_L4_reduced)$modularity
-modL4 <- computeModules(quantMatrix_L4_reduced)
+QL4_obs <- DIRT_LPA_wb_plus(quantMatrix_L4)$modularity
+modL4 <- computeModules(quantMatrix_L4)
 plotModuleWeb(modL4)
 
-QL5_obs <- DIRT_LPA_wb_plus(quantMatrix_L5_reduced)$modularity
-modL5 <- computeModules(quantMatrix_L5_reduced)
+QL5_obs <- DIRT_LPA_wb_plus(quantMatrix_L5)$modularity
+modL5 <- computeModules(quantMatrix_L5)
 plotModuleWeb(modL5)
 
-QE_obs <- DIRT_LPA_wb_plus(quantMatrix_E_reduced)$modularity
-modE <- computeModules(quantMatrix_E_reduced)
+QE_obs <- DIRT_LPA_wb_plus(quantMatrix_E)$modularity
+modE <- computeModules(quantMatrix_E)
 plotModuleWeb(modE)
 ```
 
@@ -201,24 +201,24 @@ rel_QE <- (QE_obs - mean(QE_nulls))/mean(QE_nulls)
 Calculate nestedness of each matrix using WNODA index (Pinheiro et al 2019)
 
 ```{r nestedness}
-wnodaF <- nest.smdm(quantMatrix_F_reduced, weighted = TRUE, decreasing = "abund")#use decreasing = "abund" to invoke WNODA. Default is to sort before calculating
+wnodaF <- nest.smdm(quantMatrix_F, weighted = TRUE, decreasing = "abund")#use decreasing = "abund" to invoke WNODA. Default is to sort before calculating
 wnodaF_obs <- wnodaF$WNODAmatrix#nestedness for entire matrix (WNODA statistic)
 
 
 #repeat for other matrices
-wnodaD <- nest.smdm(quantMatrix_D_reduced, weighted = TRUE, decreasing = "abund")#use decreasing = "abund" to invoke WNODA. Default is to sort before calculating
+wnodaD <- nest.smdm(quantMatrix_D, weighted = TRUE, decreasing = "abund")#use decreasing = "abund" to invoke WNODA. Default is to sort before calculating
 wnodaD_obs <- wnodaD$WNODAmatrix
 
 
-wnodaL4 <- nest.smdm(quantMatrix_L4_reduced, weighted = TRUE, decreasing = "abund")#use decreasing = "abund" to invoke WNODA. Default is to sort before calculating
+wnodaL4 <- nest.smdm(quantMatrix_L4, weighted = TRUE, decreasing = "abund")#use decreasing = "abund" to invoke WNODA. Default is to sort before calculating
 wnodaL4_obs <- wnodaL4$WNODAmatrix
 
 
-wnodaL5 <- nest.smdm(quantMatrix_L5_reduced, weighted = TRUE, decreasing = "abund")#use decreasing = "abund" to invoke WNODA. Default is to sort before calculating
+wnodaL5 <- nest.smdm(quantMatrix_L5, weighted = TRUE, decreasing = "abund")#use decreasing = "abund" to invoke WNODA. Default is to sort before calculating
 wnodaL5_obs <- wnodaL5$WNODAmatrix
 
 
-wnodaE <- nest.smdm(quantMatrix_E_reduced, weighted = TRUE, decreasing = "abund")#use decreasing = "abund" to invoke WNODA. Default is to sort before calculating
+wnodaE <- nest.smdm(quantMatrix_E, weighted = TRUE, decreasing = "abund")#use decreasing = "abund" to invoke WNODA. Default is to sort before calculating
 wnodaE_obs <- wnodaE$WNODAmatrix
 ```
 
@@ -270,5 +270,3 @@ plot(density(wnodaE_nulls), xlim = c(0, 60), lwd = 2, main = "Nestedness E", xla
 abline(v = wnodaE_obs, col = "red", lwd = 2)
 rel_wnodaE <- (wnodaE_obs - mean(wnodaE_nulls))/mean(wnodaE_nulls)
 ```
- 
-
