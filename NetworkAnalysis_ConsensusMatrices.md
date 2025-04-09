@@ -41,6 +41,10 @@ visweb(quantScores_matrix)#visualize the matrix
 Make the matrix binary
 ```{r binary}
 quantScores_bin<- as.data.frame(ifelse(quantScores > 0.5, 1, 0))
+
+
+#Uncomment the following line to set threshold at 0.25 instead of 0.5 (for figure S4)
+#quantScores_bin<- as.data.frame(ifelse(quantScores > 0.25, 1, 0))
 ```
 ***
 
@@ -284,4 +288,66 @@ par(mar = c(5.1, 4.1, 4.1, 2.1))
 plot(density(Q_hostBin_nulls), xlim = c(0, 0.6), lwd = 2, main = "Modularity hostBin", xlab = paste("Q =", round(Q_hostBin_obs, digits = 3), "    z =", round(z_Q_hostBin, digits = 3), "    p =", round(p_Q_hostBin, digits = 3)) , ylab = "Density")
 abline(v = Q_hostBin_obs, col = "red", lwd = 2)#plot observed modularity
 rel_Q_hostBin <- (Q_hostBin_obs - mean(Q_hostBin_nulls))/mean(Q_hostBin_nulls)
+```
+
+***
+
+## Foregut attachment site specialists (for figure S5)
+***
+
+Reduce the dataframe to only inlcude the 12 isolates that attach exclusively to the Foregut
+```{r Fonly}
+
+Fonly_isolates <- c("C1", "C19", "P3", "P20", "P31", "P37", "P50", "P1042", "P2022", "P4035", "P4057", "P4064")
+
+quantScores_hostBin_Fonly <- quantScores_hostBin[rownames(quantScores_hostBin) %in% Fonly_isolates, ]
+visweb(quantScores_hostBin_Fonly)
+
+```
+
+Null model
+
+```{r nullsParHost}
+
+nmhostBin_Fonly <- vegan::nullmodel(quantScores_hostBin_Fonly, "quasiswap")#set up the null model approach
+nullshostBin_Fonly <- simulate(nmhostBin_Fonly, nsim = 1000)#do the actual simulations of null models
+```
+
+Nestedness Host matrix
+
+```{r nestParHost}
+par(mar = c(5.1, 4.1, 4.1, 2.1))
+
+#nestedness:
+nodfhostBin_Fonly <- nest.smdm(quantScores_hostBin_Fonly, weighted = FALSE, decreasing = "fill")#use decreasing = "fill" to invoke nodf. Default is to sort before calculating
+nodfhostBin_Fonly_obs <- nodfhostBin_Fonly$NODFmatrix
+
+nodfhostBin_Fonly_nulls <- apply(nullshostBin_Fonly, 3, function(x)nest.smdm(x, weighted = FALSE, decreasing = "fill")$NODFmatrix)#takes a long time
+z_nodfhostBin_Fonly <- (nodfhostBin_Fonly_obs - mean(nodfhostBin_Fonly_nulls))/sd(nodfhostBin_Fonly_nulls)
+p_nodfhostBin_Fonly <- 2*pnorm(-abs(z_nodfhostBin_Fonly))
+plot(density(nodfhostBin_Fonly_nulls), xlim = c(0, 80), lwd = 2, main = "Nestedness hostBin_Fonly", xlab = paste("nodf =", round(nodfhostBin_Fonly_obs, digits = 3), "    z =", round(z_nodfhostBin_Fonly, digits = 3), "    p =", round(p_nodfhostBin_Fonly, digits = 4)) , ylab = "Density")
+abline(v = nodfhostBin_Fonly_obs, col = "red", lwd = 2)
+rel_nodfhostBin_Fonly <- (nodfhostBin_Fonly_obs - mean(nodfhostBin_Fonly_nulls))/mean(nodfhostBin_Fonly_nulls)
+```
+
+Modularity Host matrix
+
+```{r modParHost}
+#plot modular network
+#make it a matrix
+quantScores_hostBin_Fonly_matrix <- data.matrix(quantScores_hostBin_Fonly)
+
+quantScores_hostBin_Fonly_matrixMod <- computeModules(quantScores_hostBin_Fonly_matrix)
+plotModuleWeb(quantScores_hostBin_Fonly_matrixMod, labsize = 0.6)
+
+Q_hostBin_Fonly_obs <- DIRT_LPA_wb_plus(quantScores_hostBin_Fonly_matrix)$modularity
+
+Q_hostBin_Fonly_nulls <- apply(nullshostBin_Fonly, 3, function(x) DIRT_LPA_wb_plus(x)$modularity)#takes a long time
+z_Q_hostBin_Fonly <- (Q_hostBin_Fonly_obs - mean(Q_hostBin_Fonly_nulls))/sd(Q_hostBin_Fonly_nulls)
+p_Q_hostBin_Fonly <- 2*pnorm(-abs(z_Q_hostBin_Fonly))
+
+par(mar = c(5.1, 4.1, 4.1, 2.1))
+plot(density(Q_hostBin_Fonly_nulls), xlim = c(0, 0.6), lwd = 2, main = "Modularity hostBin_Fonly", xlab = paste("Q =", round(Q_hostBin_Fonly_obs, digits = 3), "    z =", round(z_Q_hostBin_Fonly, digits = 3), "    p =", round(p_Q_hostBin_Fonly, digits = 3)) , ylab = "Density")
+abline(v = Q_hostBin_Fonly_obs, col = "red", lwd = 2)#plot observed modularity
+rel_Q_hostBin_Fonly <- (Q_hostBin_Fonly_obs - mean(Q_hostBin_Fonly_nulls))/mean(Q_hostBin_Fonly_nulls)
 ```
