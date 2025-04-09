@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/857270732.svg)](https://doi.org/10.5281/zenodo.15184058) 
+
 # paper-Network-Analysis
 ***
 Analyses and data associated with the manuscript: *Mixed network structure in a coevolving host - parasite system*. 
